@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Quiz</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .quiz-container {
+            max-width: 900px;
+            margin: 100px auto;
+            padding: 80px 60px;
+            background: linear-gradient(135deg, rgba(11, 17, 32, 0.98) 0%, rgba(17, 24, 39, 0.95) 100%);
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(180, 78, 8, 0.4), 0 0 100px rgba(255, 215, 0, 0.2);
+            border: 3px solid;
+            border-image: linear-gradient(135deg, #FFD700, #B44E08, #FF8C00) 1;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .quiz-question {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 60px;
+            color: #FFD700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.8), 0 0 60px rgba(180, 78, 8, 0.4);
+            animation: pulse-glow 3s infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                text-shadow: 0 0 30px rgba(255, 215, 0, 0.8), 0 0 60px rgba(180, 78, 8, 0.4);
+                transform: scale(1);
+            }
+            50% {
+                text-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 80px rgba(180, 78, 8, 0.6);
+                transform: scale(1.02);
+            }
+        }
+
+        .quiz-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+            margin-top: 60px;
+            position: relative;
+            min-height: 300px;
+            padding: 0 40px;
+        }
+
+        .quiz-btn {
+            padding: 30px 70px;
+            font-size: 2em;
+            font-weight: bold;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .quiz-btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-oui {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #0B1120;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+            position: relative;
+            left: 0;
+        }
+
+        .btn-oui:hover {
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.6);
+        }
+
+        .btn-non {
+            background: linear-gradient(135deg, #B44E08 0%, #8B3A00 100%);
+            color: white;
+            position: absolute;
+            right: 40px;
+            top: 0;
+            transition: left 0.25s ease-out,
+            top 0.25s ease-out,
+            right 0.25s ease-out,
+            transform 0.2s ease,
+            opacity 0.2s ease;
+        }
+
+        .btn-non:hover {
+            background: linear-gradient(135deg, #8B3A00 0%, #B44E08 100%);
+        }
+
+        .fun-messages {
+            margin-top: 30px;
+            font-size: 1.5em;
+            color: #FFA500;
+            min-height: 50px;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+            animation: fade-in 0.5s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .attempt-counter {
+            margin-top: 30px;
+            font-size: 1.4em;
+            color: #C0C0C0;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+
+        .success-message {
+            display: none;
+            margin-top: 40px;
+            padding: 40px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 15px;
+            color: #0B1120;
+            font-size: 1.5em;
+            font-weight: bold;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success-message h2 {
+            margin: 0 0 20px 0;
+            font-size: 2.5em;
+            color: #0B1120;
+        }
+
+        .success-message p {
+            margin: 10px 0;
+            color: #1A2332;
+            font-size: 1.2em;
+        }
+
+        .next-steps {
+            margin-top: 30px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .next-btn {
+            padding: 15px 30px;
+            background: #0B1120;
+            color: #FFD700;
+            border: 2px solid #FFD700;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .next-btn:hover {
+            background: #FFD700;
+            color: #0B1120;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .quiz-container {
+                padding: 40px 20px;
+                margin: 50px 20px;
+            }
+
+            .quiz-question {
+                font-size: 2em;
+            }
+
+            .quiz-btn {
+                padding: 20px 40px;
+                font-size: 1.5em;
+            }
+
+            .quiz-buttons {
+                min-height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+
+<nav>
+    <div class="nav-brand">Mon Portfolio</div>
+    <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="profil2.html">Profil</a></li>
+        <li><a href="projets.html">Projets</a></li>
+        <li><a href="certifications.html">Formation</a></li>
+        <li><a href="competences.html">Compétences</a></li>
+        <li><a href="quiz.html" class="active">Quiz</a></li>
+    </ul>
+</nav>
+
+<div class="floating-planet" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"></div>
+
+<div class="container">
+    <div class="quiz-container">
+        <h1 class="quiz-question">Devez-vous me recruter ?</h1>
+
+        <div class="fun-messages" id="funMessage"></div>
+
+        <div class="quiz-buttons" id="quizButtons">
+            <button class="quiz-btn btn-oui" id="btnOui" onclick="handleOui()">
+                OUI
+            </button>
+            <button class="quiz-btn btn-non" id="btnNon" onmouseenter="handleNonHover()">
+                NON
+            </button>
+        </div>
+
+        <div class="attempt-counter" id="attemptCounter"></div>
+
+        <div class="success-message" id="successMessage">
+            <h2>EXCELLENT CHOIX !</h2>
+            <p>Vous avez pris la meilleure décision !</p>
+            <p>Je suis prêt à apporter mes compétences en Data & ML à votre équipe.</p>
+
+            <div class="next-steps">
+                <a href="profil2.html" class="next-btn">Voir mon Profil & CV</a>
+                <a href="projets.html" class="next-btn">Mes Projets</a>
+                <a href="mailto:elyastarzet@gmail.com" class="next-btn">Me Contacter</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>"On ne voit bien qu'avec le cœur. L'essentiel est invisible pour les yeux."</p>
+    <p>© 2026 - Portfolio conçu avec passion</p>
+</footer>
+
+<script src="script.js"></script>
+<script>
+    let attempts = 0;
+    let ouiScale = 1;
+    const btnNon = document.getElementById('btnNon');
+    const btnOui = document.getElementById('btnOui');
+    const funMessage = document.getElementById('funMessage');
+    const attemptCounter = document.getElementById('attemptCounter');
+    const quizButtons = document.getElementById('quizButtons');
+
+    const nonTexts = [
+        "NON",
+        "Êtes-vous sûr ?",
+        "Vraiment ?",
+        "Reconsidérez",
+        "Ne faites pas ça",
+        "Attendez !",
+        "Pitié non",
+        "Une dernière chance ?",
+        "Vous insistez ?",
+        "Mauvaise idée",
+        "Au secours !",
+        "STOP !",
+        "Incroyable",
+        "Têtu hein ?",
+        "CLIQUEZ OUI !"
+    ];
+
+    const messages = [
+        "Hmm... Vous hésitez ?",
+        "Le bouton OUI devient plus attirant non ?",
+        "Regardez comme le OUI est beau maintenant !",
+        "Le OUI vous appelle...",
+        "Allez, vous savez que vous voulez dire OUI !",
+        "Le OUI est ÉNORME maintenant !",
+        "Sérieusement, cliquez sur OUI !",
+        "Le bouton OUI occupe tout l'écran bientôt !",
+        "Bon, on arrête les bêtises ? Cliquez OUI !",
+        "Vous êtes vraiment déterminé à dire Non ?",
+        "Le OUI fait maintenant 3x sa taille !",
+        "OK vous gagnez... MAIS CLIQUEZ SUR OUI !",
+        "Le Non va bientôt disparaître...",
+        "Cliquez sur ce MAGNIFIQUE bouton OUI !"
+    ];
+
+    // Positionner le bouton Non à droite au démarrage
+    function initializeNonPosition() {
+        // Le NON est déjà positionné à droite avec CSS (right: 40px)
+        // Pas besoin de calcul supplémentaire
+    }
+
+    // Attendre que le DOM soit chargé
+    window.addEventListener('load', () => {
+        setTimeout(initializeNonPosition, 100);
+    });
+
+    function handleNonHover() {
+        attempts++;
+        attemptCounter.textContent = `Tentatives : ${attempts}`;
+
+        // Changer le texte du bouton Non
+        const newText = nonTexts[Math.min(attempts, nonTexts.length - 1)];
+        btnNon.textContent = newText;
+
+        // Message
+        const randomMessage = messages[Math.min(attempts - 1, messages.length - 1)];
+        funMessage.textContent = randomMessage;
+
+        // Faire grossir le bouton OUI avec animation fluide
+        ouiScale = 1 + (attempts * 0.4);
+        btnOui.style.transform = `scale(${ouiScale})`;
+
+        // Déplacer le bouton Non LOIN avec animation de glissement
+        moveNonButtonFar();
+
+        // Réduire le bouton Non avec animation
+        const nonScale = Math.max(0.3, 1 - (attempts * 0.08));
+        btnNon.style.transform = `scale(${nonScale})`;
+
+        // Effet lumineux sur OUI
+        if (attempts >= 5) {
+            btnOui.style.boxShadow = `0 0 ${30 + attempts * 5}px rgba(255, 215, 0, ${0.5 + attempts * 0.05})`;
+        }
+
+        // Rendre le Non transparent progressivement
+        if (attempts >= 7) {
+            btnNon.style.opacity = Math.max(0.2, 1 - (attempts - 7) * 0.1);
+        }
+
+        // Messages spéciaux
+        if (attempts >= 10) {
+            funMessage.textContent = "LE OUI EST ÉNORME ! Impossible de le rater !";
+            btnNon.style.fontSize = '0.7em';
+        }
+
+        if (attempts >= 15) {
+            funMessage.textContent = "BON OK ! Le OUI fait 3x sa taille ! CLIQUEZ DESSUS !";
+            btnOui.style.boxShadow = '0 0 100px rgba(255, 215, 0, 1)';
+            btnNon.style.fontSize = '0.5em';
+        }
+    }
+
+    function moveNonButtonFar() {
+        const container = quizButtons.getBoundingClientRect();
+        const btnWidth = btnNon.offsetWidth;
+        const btnHeight = btnNon.offsetHeight;
+
+        // Position actuelle du bouton
+        const btnRect = btnNon.getBoundingClientRect();
+        const currentX = btnRect.left - container.left;
+        const currentY = btnRect.top - container.top;
+
+        // Calculer les limites
+        const maxX = container.width - btnWidth - 40;
+        const maxY = container.height - btnHeight - 40;
+
+        let randomX, randomY, distance;
+        let attempts = 0;
+
+        // Boucle pour garantir un déplacement LOIN (au moins 200px de distance)
+        do {
+            randomX = Math.max(40, Math.random() * maxX);
+            randomY = Math.max(40, Math.random() * maxY);
+
+            // Calculer la distance euclidienne
+            const dx = randomX - currentX;
+            const dy = randomY - currentY;
+            distance = Math.sqrt(dx * dx + dy * dy);
+
+            attempts++;
+            if (attempts > 50) break; // Sécurité pour éviter boucle infinie
+        } while (distance < 200); // Distance minimum de 200px
+
+        // Passer en positionnement absolu avec left/top au lieu de right
+        btnNon.style.right = 'auto';
+        btnNon.style.left = randomX + 'px';
+        btnNon.style.top = randomY + 'px';
+    }
+
+    function handleOui() {
+        // Masquer les boutons
+        quizButtons.style.display = 'none';
+        attemptCounter.style.display = 'none';
+        funMessage.style.display = 'none';
+
+        // Afficher le message de succès
+        const successMsg = document.getElementById('successMessage');
+        successMsg.style.display = 'block';
+
+        // Message personnalisé
+        if (attempts > 15) {
+            successMsg.querySelector('h2').textContent = 'ENFIN ! Vous avez fait le bon choix !';
+            successMsg.querySelector('p').textContent = `Après ${attempts} tentatives, vous avez vu la lumière !`;
+        } else if (attempts > 5) {
+            successMsg.querySelector('h2').textContent = 'EXCELLENT CHOIX !';
+            successMsg.querySelector('p').textContent = `Il vous aura fallu ${attempts} hésitation${attempts > 1 ? 's' : ''}, mais vous y êtes arrivé !`;
+        } else if (attempts > 0) {
+            successMsg.querySelector('h2').textContent = 'BRAVO ! Sage décision !';
+            successMsg.querySelector('p').textContent = `Un petit ${attempts} doute${attempts > 1 ? 's' : ''}, mais le bon choix au final !`;
+        }
+
+        // Confettis
+        launchConfetti();
+    }
+
+    function launchConfetti() {
+        const colors = ['#FFD700', '#FFA500', '#B44E08', '#FF8C00', '#DAA520'];
+
+        for (let i = 0; i < 100; i++) {
+            setTimeout(() => {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = '-20px';
+                confetti.style.borderRadius = '50%';
+                confetti.style.opacity = '1';
+                confetti.style.zIndex = '9999';
+
+                document.body.appendChild(confetti);
+
+                const duration = Math.random() * 3000 + 2000;
+                const angle = Math.random() * 360;
+
+                confetti.animate([
+                    { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                    { transform: `translateY(${window.innerHeight + 20}px) rotate(${angle}deg)`, opacity: 0 }
+                ], {
+                    duration: duration,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }).onfinish = () => confetti.remove();
+
+            }, i * 30);
+        }
+    }
+</script>
+</body>
+</html>

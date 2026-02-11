@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Projets Académiques</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Styles spécifiques pour les images de projets */
+        .project-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .project-image {
+            position: sticky;
+            top: 100px;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: auto;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .project-image img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .image-caption {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #888;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .project-links {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .project-links .btn-primary,
+        .project-links .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .project-links .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .project-links .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .project-links .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .project-links .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Petite bulle simple pour rapport en cours */
+        .report-tooltip {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) translateY(10px);
+            background: rgba(20, 25, 35, 0.95);
+            border: 1px solid rgba(255, 111, 0, 0.5);
+            border-radius: 8px;
+            padding: 0.8rem 1.2rem;
+            color: #fff;
+            font-size: 0.9rem;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .report-tooltip.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .project-content {
+                grid-template-columns: 1fr;
+            }
+
+            .project-image {
+                position: relative;
+                top: 0;
+            }
+
+            .project-image img {
+                max-height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+
+<nav>
+    <div class="nav-brand">Mon Portfolio</div>
+    <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="profil2.html">Profil</a></li>
+        <li><a href="projets.html" class="active">Projets</a></li>
+        <li><a href="certifications.html">Formation</a></li>
+        <li><a href="competences.html">Compétences</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+    </ul>
+</nav>
+
+<div class="floating-planet" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"></div>
+
+<!-- Petite bulle simple -->
+<div class="report-tooltip" id="reportTooltip">C'est en cours :/</div>
+
+<div class="container page-content">
+    <div class="page-header">
+        <h1>Projets Académiques</h1>
+        <p class="page-subtitle">"C'est le temps que tu as perdu pour ta rose qui fait ta rose si importante"</p>
+    </div>
+
+    <!-- Filtres -->
+    <div class="filters">
+        <button class="filter-btn active" onclick="filterProjects('all')">Tous</button>
+        <button class="filter-btn" onclick="filterProjects('code')">Programmation</button>
+        <button class="filter-btn" onclick="filterProjects('data')">Data & ML</button>
+    </div>
+
+    <!-- Projet 1: Uber -->
+    <article class="project-detail" data-category="data">
+        <div class="project-header">
+            <h2>🚕 Prédiction des Prix des Courses Uber</h2>
+            <span class="project-date">2024-2025</span>
+        </div>
+
+        <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Machine Learning</span>
+            <span class="tag">Scikit-learn</span>
+            <span class="tag">Pandas</span>
+        </div>
+
+        <div class="project-content">
+            <div class="project-image">
+                <img src="uberpr.png" alt="Prédiction prix Uber">
+                <p class="image-caption">Modèle de prédiction ML supervisé</p>
+            </div>
+
+            <div class="project-description">
+                <h3>Contexte</h3>
+                <p>
+                    Projet académique de Machine Learning supervisé visant à prédire le prix des courses
+                    Uber en fonction de différents paramètres (distance, heure, localisation, météo, etc.).
+                </p>
+
+                <h3>Objectifs</h3>
+                <ul>
+                    <li>Analyser et nettoyer un large dataset de courses Uber</li>
+                    <li>Développer et entraîner plusieurs modèles de régression</li>
+                    <li>Optimiser les hyperparamètres pour améliorer la précision</li>
+                    <li>Évaluer les performances avec différentes métriques (RMSE, MAE, R²)</li>
+                </ul>
+
+                <h3>Résultats</h3>
+                <p>
+                    Modèle final avec un R² > 0.96, permettant des prédictions précises pour optimiser
+                    les tarifs en fonction du contexte.
+                </p>
+
+                <div class="project-links">
+                    <a href="Final%20Report%20(1).pdf" class="btn-primary" target="_blank">
+                        📄 Voir le rapport complet
+                    </a>
+                    <a href="https://github.com/elyasefrei/Uber-Price-prediction" class="btn-secondary" target="_blank">
+                        💻 Code source
+                    </a>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- Projet 2: Dermatologie -->
+    <article class="project-detail" data-category="data">
+        <div class="project-header">
+            <h2>🏥 Prédiagnostic de Maladies Dermatologiques</h2>
+            <span class="project-date">2024-2025</span>
+        </div>
+
+        <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Deep Learning</span>
+            <span class="tag">TensorFlow / Keras</span>
+            <span class="tag">CNN</span>
+        </div>
+
+        <div class="project-content">
+            <div class="project-image">
+                <img src="projects/meskin/Capture%20d'écran%202026-02-08%20202857.png" alt="Prédiagnostic dermatologie">
+                <p class="image-caption">Classification par Deep Learning</p>
+            </div>
+
+            <div class="project-description">
+                <h3>Description</h3>
+                <p>
+                    Projet de Deep Learning supervisé utilisant des réseaux de neurones convolutifs (CNN)
+                    pour classifier et prédiagnostiquer différentes maladies dermatologiques à partir d'images.
+                </p>
+
+                <h3>Méthodologie</h3>
+                <ul>
+                    <li>Collecte et augmentation de données d'images médicales</li>
+                    <li>Architecture CNN personnalisée avec couches de convolution et pooling</li>
+                    <li>Transfer learning avec modèles pré-entraînés (ResNet, VGG)</li>
+                    <li>Techniques de régularisation (Dropout, Batch Normalization)</li>
+                </ul>
+
+                <h3>Impact</h3>
+                <p>
+                    Système capable d'assister les professionnels de santé dans le diagnostic précoce
+                    de pathologies cutanées avec une précision significative.
+                </p>
+
+                <div class="project-links">
+                    <a href="Meskin%20(1).pdf" class="btn-primary" target="_blank">
+                        📄 Voir le rapport complet
+                    </a>
+                    <a href="https://github.com/elyasefrei/Meskin" class="btn-secondary" target="_blank">
+                        💻 Code source
+                    </a>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- Projet 3: Base de données -->
+    <article class="project-detail" data-category="code">
+        <div class="project-header">
+            <h2>🏥 Base de Données Hospitalière</h2>
+            <span class="project-date">2024</span>
+        </div>
+
+        <div class="project-tags">
+            <span class="tag">MySQL</span>
+            <span class="tag">SQL</span>
+            <span class="tag">Modélisation E/A</span>
+            <span class="tag">Base de données</span>
+        </div>
+
+        <div class="project-content">
+            <div class="project-image">
+                <img src="projects/bdd/Capture%20d'écran%202026-02-08%20231223.png" alt="Base de données hospitalière">
+                <br>
+                <img src="projects/bdd/Capture%20d'écran%202026-02-08%20231837.png">
+                <p class="image-caption">Schéma de la base de données</p>
+            </div>
+
+            <div class="project-description">
+                <h3>Description</h3>
+                <p>
+                    Conception complète d'une base de données pour un système hospitalier, de la
+                    modélisation conceptuelle à l'implémentation et aux requêtes complexes.
+                </p>
+
+                <h3>Réalisations</h3>
+                <ul>
+                    <li>Modélisation Entité-Association (E/A) du système hospitalier</li>
+                    <li>Création du schéma relationnel normalisé (3NF)</li>
+                    <li>Implémentation en MySQL avec tables, contraintes et index</li>
+                    <li>Développement de requêtes SQL complexes (jointures, agrégations, sous-requêtes)</li>
+                    <li>Procédures stockées et triggers pour l'intégrité des données</li>
+                </ul>
+
+                <div class="project-links">
+                    <a href="#" class="btn-primary" onclick="showReportPopup(event)">
+                        📄 Documentation complète
+                    </a>
+                    <a href="https://github.com/elyasefrei/Projet-Base-de-Donnees-Hospitaliere" class="btn-secondary" target="_blank">
+                        💻 Scripts SQL
+                    </a>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- Projet 4: Missions Spatiales -->
+    <article class="project-detail" data-category="data">
+        <div class="project-header">
+            <h2>🚀 Analyse des Missions Spatiales (1957-2025)</h2>
+            <span class="project-date">2025</span>
+        </div>
+
+        <div class="project-tags">
+            <span class="tag">Excel Avancé</span>
+            <span class="tag">Power BI</span>
+            <span class="tag">Python</span>
+            <span class="tag">Data Analysis</span>
+        </div>
+
+        <div class="project-content">
+            <div class="project-image">
+                <img src="projects/space%20masterclass/Capture%20d'écran%202026-02-09%20111914.png" alt="Dashboard missions spatiales">
+                <br>
+                <img src="projects/space%20masterclass/Capture%20d'écran%202026-02-09%20111933.png" alt="Dashboard missions spatiales">
+                <br>
+                <img src="projects/space%20masterclass/Capture%20d'écran%202026-02-09%20111943.png" alt="Dashboard missions spatiales">
+                <p class="image-caption">Dashboard interactif Power BI</p>
+            </div>
+
+            <div class="project-description">
+                <h3>Description</h3>
+                <p>
+                    Analyse complète de 68 ans d'exploration spatiale avec 856 missions référencées
+                    de 9 agences spatiales internationales. Dashboard Excel + Power BI pour visualiser
+                    l'évolution de la conquête spatiale.
+                </p>
+
+                <h3>Réalisations</h3>
+                <ul>
+                    <li>Collecte et structuration de données de 9 agences spatiales (NASA, SpaceX, ESA, etc.)</li>
+                    <li>Fichier Excel professionnel avec 6 feuilles d'analyses et formules avancées</li>
+                    <li>Dashboard Power BI interactif avec KPIs et visualisations</li>
+                    <li>Analyses temporelles, financières et comparatives</li>
+                </ul>
+
+                <h3>Insights Clés</h3>
+                <ul>
+                    <li>Taux de succès global : 96.5%</li>
+                    <li>335 milliards USD investis depuis 1957</li>
+                    <li>Révolution SpaceX : coût divisé par 7 grâce à la réutilisabilité</li>
+                    <li>Montée spectaculaire de la Chine depuis 2010</li>
+                </ul>
+
+                <div class="project-links">
+                    <a href="#" class="btn-primary" onclick="showReportPopup(event)">
+                        📄 Rapport d'analyse
+                    </a>
+                    <a href="Analyse_Missions_Spatiales_REAL.xlsx" class="btn-secondary" target="_blank">
+                        📊 Fichier Excel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- Projet 5: Programmation multi-langages -->
+    <article class="project-detail" data-category="code">
+        <div class="project-header">
+            <h2>💻 Projets de Programmation Multi-Langages</h2>
+            <span class="project-date">2023-2025</span>
+        </div>
+
+        <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Java</span>
+            <span class="tag">C</span>
+            <span class="tag">Algorithmique</span>
+        </div>
+
+        <div class="project-content">
+            <div class="project-image">
+                <img src="projects/proba/Capture%20d'écran%202026-02-09%20114635.png" alt="Projets programmation">
+                <br>
+                <img src="projects/proba/Capture%20d'écran%202026-02-09%20114912.png">
+                <br>
+                <img src="projects/robot/Capture%20d'écran%202026-02-09%20132946.png">
+                <p class="image-caption">Diversité des projets de programmation</p>
+            </div>
+
+            <div class="project-description">
+                <h3>Projets Python</h3>
+                <ul>
+                    <li>Algorithmes de tri et recherche optimisés</li>
+                    <li>Structures de données avancées (arbres, graphes, tables de hachage)</li>
+                    <li>Scripts d'automatisation et traitement de données</li>
+                    <li>Programmation orientée objet avec design patterns</li>
+                </ul>
+
+                <h3>Projets Java</h3>
+                <ul>
+                    <li>Applications avec interfaces graphiques (Swing/JavaFX)</li>
+                    <li>Gestion de collections et manipulation de fichiers</li>
+                    <li>Implémentation de patterns (MVC, Singleton, Factory)</li>
+                </ul>
+
+                <h3>Projets C</h3>
+                <ul>
+                    <li>Gestion mémoire et pointeurs</li>
+                    <li>Manipulation de fichiers binaires</li>
+                    <li>Algorithmes de bas niveau optimisés</li>
+                </ul>
+
+                <div class="project-links">
+                    <a href="https://github.com/elyasefrei" class="btn-primary" target="_blank">
+                        💻 Voir tous les projets
+                    </a>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- Projet 6: Développement Web -->
+    <article class="project-detail" data-category="code">
+        <div class="project-header">
+            <h2>🌐 Développement de Sites Web</h2>
+            <span class="project-date">2024-2025</span>
+        </div>
+
+        <div class="project-tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">Responsive Design</span>
+        </div>
+
+        <div class="project-content">
+            <div class="project-image">
+                <img src="projects/butterflower/Capture%20d'écran%202026-02-08%20205638.png" alt="Développement web">
+                <br>
+                <img src="projects/Raphinea/Capture%20d'écran%202026-02-08%20211342.png">
+                <br>
+                <img src="projects/Bouboule/Capture%20d'écran%202026-02-08%20210622.png">
+                <p class="image-caption">Sites web modernes et responsives</p>
+            </div>
+
+            <div class="project-description">
+                <h3>Projets réalisés</h3>
+                <ul>
+                    <li>Portfolio personnel avec thème spatial interactif</li>
+                    <li>Sites web responsives avec HTML5 et CSS3</li>
+                    <li>Interfaces interactives avec JavaScript vanilla</li>
+                    <li>Animations et transitions CSS avancées</li>
+                    <li>Optimisation des performances et accessibilité</li>
+                </ul>
+
+                <h3>Compétences</h3>
+                <p>
+                    Développement front-end, design responsive, manipulation du DOM,
+                    programmation événementielle, et bonnes pratiques web.
+                </p>
+
+                <div class="project-links">
+                    <a href="index.html" class="btn-primary">
+                        🌐 Voir ce portfolio
+                    </a>
+                    <a href="https://github.com/elyasefrei" class="btn-secondary" target="_blank">
+                        💻 Autres projets web
+                    </a>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <div class="cta-section">
+        <h2>Vous avez un projet ?</h2>
+        <p>Je serais ravi de collaborer avec vous sur des projets innovants dans les domaines de la Data et du Machine Learning.</p>
+        <a href="mailto:elyastarzet@gmail.com" target="_blank" class="btn-primary">Me contacter</a>
+    </div>
+
+    <div class="navigation-buttons">
+        <a href="profil2.html" class="btn-secondary">← Profil</a>
+        <a href="certifications.html" class="btn-primary">Certifications →</a>
+    </div>
+</div>
+
+<footer>
+    <p>"Toutes les grandes personnes ont d'abord été des enfants, mais peu d'entre elles s'en souviennent."</p>
+    <p>© 2026 - Portfolio conçu avec passion</p>
+</footer>
+
+<script src="script.js"></script>
+<script>
+    function filterProjects(category) {
+        const projects = document.querySelectorAll('.project-detail');
+        const buttons = document.querySelectorAll('.filter-btn');
+
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+
+        projects.forEach(project => {
+            if (category === 'all' || project.dataset.category === category) {
+                project.style.display = 'block';
+            } else {
+                project.style.display = 'none';
+            }
+        });
+    }
+
+    function showReportPopup(event) {
+        event.preventDefault();
+        const tooltip = document.getElementById('reportTooltip');
+        tooltip.classList.add('active');
+        setTimeout(() => {
+            tooltip.classList.remove('active');
+        }, 2000);
+    }
+</script>
+</body>
+</html>

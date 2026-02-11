@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Certifications</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Styles pour les carrousels miniatures */
+        .cert-details {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .cert-gallery-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-left: auto;
+        }
+
+        .cert-gallery-btn {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 0.4rem 0.9rem;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #fff;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            white-space: nowrap;
+        }
+
+        .cert-gallery-btn:hover {
+            background: rgba(40, 51, 69, 0.9);
+            border-color: rgba(255, 111, 0, 0.4);
+            box-shadow: 0 4px 12px rgba(255, 111, 0, 0.2);
+        }
+
+        /* Popup Carrousel */
+        .carousel-popup {
+            position: absolute;
+            bottom: calc(100% + 10px);
+            right: 0;
+            width: 400px;
+            background: rgba(20, 25, 35, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 111, 0, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-popup.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .carousel-popup.locked {
+            pointer-events: auto;
+        }
+
+        /* Petite flèche pointant vers le bouton */
+        .carousel-popup::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid rgba(20, 25, 35, 0.98);
+        }
+
+        .carousel-header {
+            margin-bottom: 1rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 111, 0, 0.2);
+        }
+
+        .carousel-header h4 {
+            margin: 0 0 0.3rem 0;
+            font-size: 1rem;
+            color: #ff6f00;
+        }
+
+        .carousel-header p {
+            margin: 0;
+            font-size: 0.75rem;
+            opacity: 0.7;
+            color: #fff;
+        }
+
+        .carousel-content {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .carousel-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .carousel-nav:hover {
+            background: rgba(255, 111, 0, 0.8);
+            border-color: rgba(255, 111, 0, 0.5);
+        }
+
+        .carousel-nav.prev {
+            left: 8px;
+        }
+
+        .carousel-nav.next {
+            right: 8px;
+        }
+
+        .carousel-footer {
+            margin-top: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .carousel-indicators {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .carousel-indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .carousel-indicator.active {
+            background: #ff6f00;
+            width: 20px;
+            border-radius: 3px;
+        }
+
+        .carousel-counter {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.75rem;
+        }
+
+        .carousel-lock-icon {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .carousel-popup.locked .carousel-lock-icon {
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .carousel-popup {
+                width: 320px;
+                right: -10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+
+<nav>
+    <div class="nav-brand">Mon Portfolio</div>
+    <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="profil2.html">Profil</a></li>
+        <li><a href="projets.html">Projets</a></li>
+        <li><a href="certifications.html" class="active">Formation</a></li>
+        <li><a href="competences.html">Compétences</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+    </ul>
+</nav>
+
+<div class="floating-planet" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"></div>
+
+<div class="container page-content">
+    <div class="page-header">
+        <h1>Certifications & Formations</h1>
+        <p class="page-subtitle">"L'éducation n'est pas le remplissage d'un vase, mais l'allumage d'un feu"</p>
+    </div>
+
+    <!-- Timeline des certifications -->
+    <div class="timeline">
+        <!-- 2025 -->
+        <div class="timeline-item">
+            <div class="timeline-date">2025</div>
+            <div class="timeline-content">
+                <div class="certification-card">
+                    <div class="cert-header">
+                        <div class="cert-icon">🎓</div>
+                        <div>
+                            <h3>Semestre d'Échange - Asia Pacific University (APU)</h3>
+                            <p class="cert-issuer">Malaisie</p>
+                        </div>
+                    </div>
+                    <div class="cert-body">
+                        <p class="cert-description">
+                            Semestre académique complet en Malaisie avec des cours en informatique,
+                            data science et machine learning dans un environnement 100% anglophone.
+                            Expérience internationale enrichissante.
+                        </p>
+                        <div class="cert-details">
+                            <span class="cert-badge">Sept - Déc 2025</span>
+                            <span class="cert-badge">100% Anglais</span>
+                            <div class="cert-gallery-wrapper">
+                                <button class="cert-gallery-btn" data-carousel="apu">
+                                    📸 Photos
+                                </button>
+                                <div class="carousel-popup" data-carousel-id="apu">
+                                    <span class="carousel-lock-icon">🔒</span>
+                                    <div class="carousel-header">
+                                        <h4>Asia Pacific University</h4>
+                                        <p>Malaisie - Semestre d'échange 2025</p>
+                                    </div>
+                                    <div class="carousel-content">
+                                        <button class="carousel-nav prev" onclick="changeSlide('apu', -1)">‹</button>
+                                        <img class="carousel-image" src="images/apu-campus.jpg" alt="">
+                                        <button class="carousel-nav next" onclick="changeSlide('apu', 1)">›</button>
+                                    </div>
+                                    <div class="carousel-footer">
+                                        <div class="carousel-indicators"></div>
+                                        <div class="carousel-counter">
+                                            <span class="current">1</span> / <span class="total">1</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2024 -->
+        <div class="timeline-item">
+            <div class="timeline-date">2024</div>
+            <div class="timeline-content">
+                <div class="certification-card">
+                    <div class="cert-header">
+                        <div class="cert-icon">🎓</div>
+                        <div>
+                            <h3>EFREI Paris - Cycle Ingénieur (en cours)</h3>
+                            <p class="cert-issuer">École d'Ingénieurs</p>
+                        </div>
+                    </div>
+                    <div class="cert-body">
+                        <p class="cert-description">
+                            Formation d'ingénieur généraliste avec spécialisation en Data Science
+                            et Machine Learning. Classé dans le top 12% de la promotion.
+                        </p>
+                        <div class="cert-details">
+                            <span class="cert-badge cert-badge-success">Top 12%</span>
+                            <span class="cert-badge">Référent Portes Ouvertes</span>
+                            <div class="cert-gallery-wrapper">
+                                <button class="cert-gallery-btn" data-carousel="efrei">
+                                    📸 Photos
+                                </button>
+                                <div class="carousel-popup" data-carousel-id="efrei">
+                                    <span class="carousel-lock-icon">🔒</span>
+                                    <div class="carousel-header">
+                                        <h4>EFREI Paris</h4>
+                                        <p>École d'Ingénieurs</p>
+                                    </div>
+                                    <div class="carousel-content">
+                                        <button class="carousel-nav prev" onclick="changeSlide('efrei', -1)">‹</button>
+                                        <img class="carousel-image" src="images/efrei-campus.jpg" alt="">
+                                        <button class="carousel-nav next" onclick="changeSlide('efrei', 1)">›</button>
+                                    </div>
+                                    <div class="carousel-footer">
+                                        <div class="carousel-indicators"></div>
+                                        <div class="carousel-counter">
+                                            <span class="current">1</span> / <span class="total">1</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="certification-card">
+                    <div class="cert-header">
+                        <div class="cert-icon">🎓</div>
+                        <div>
+                            <h3>Certificat Voltaire</h3>
+                            <p class="cert-issuer">Certification en orthographe professionnelle</p>
+                        </div>
+                    </div>
+                    <div class="cert-body">
+                        <p class="cert-description">
+                            Certification officielle attestant du niveau d'orthographe dans un
+                            contexte professionnel et business.
+                        </p>
+                        <div class="cert-details">
+                            <span class="cert-badge cert-badge-success">Score: 820/1000</span>
+                            <span class="cert-badge">Orthographe Affaires</span>
+                            <div class="cert-gallery-wrapper">
+                                <button class="cert-gallery-btn" data-carousel="voltaire">
+                                    📄 Certificat
+                                </button>
+                                <div class="carousel-popup" data-carousel-id="voltaire">
+                                    <span class="carousel-lock-icon">🔒</span>
+                                    <div class="carousel-header">
+                                        <h4>Certificat Voltaire</h4>
+                                        <p>Score: 820/1000</p>
+                                    </div>
+                                    <div class="carousel-content">
+                                        <button class="carousel-nav prev" onclick="changeSlide('voltaire', -1)">‹</button>
+                                        <img class="carousel-image" src="images/voltaire-certificat.jpg" alt="">
+                                        <button class="carousel-nav next" onclick="changeSlide('voltaire', 1)">›</button>
+                                    </div>
+                                    <div class="carousel-footer">
+                                        <div class="carousel-indicators"></div>
+                                        <div class="carousel-counter">
+                                            <span class="current">1</span> / <span class="total">1</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2023 -->
+        <div class="timeline-item">
+            <div class="timeline-date">2023</div>
+            <div class="timeline-content">
+                <div class="certification-card">
+                    <div class="cert-header">
+                        <div class="cert-icon">🎓</div>
+                        <div>
+                            <h3>TOEIC - Test of English for International Communication</h3>
+                            <p class="cert-issuer">ETS Global</p>
+                        </div>
+                    </div>
+                    <div class="cert-body">
+                        <p class="cert-description">
+                            Certification officielle évaluant les compétences en anglais professionnel
+                            dans un contexte international.
+                        </p>
+                        <div class="cert-details">
+                            <span class="cert-badge cert-badge-success">Score: 900/990</span>
+                            <span class="cert-badge">Niveau B2/C1</span>
+                            <div class="cert-gallery-wrapper">
+                                <button class="cert-gallery-btn" data-carousel="toeic">
+                                    📄 Certificat
+                                </button>
+                                <div class="carousel-popup" data-carousel-id="toeic">
+                                    <span class="carousel-lock-icon">🔒</span>
+                                    <div class="carousel-header">
+                                        <h4>TOEIC</h4>
+                                        <p>Score: 900/990</p>
+                                    </div>
+                                    <div class="carousel-content">
+                                        <button class="carousel-nav prev" onclick="changeSlide('toeic', -1)">‹</button>
+                                        <img class="carousel-image" src="images/toeic-certificat.jpg" alt="">
+                                        <button class="carousel-nav next" onclick="changeSlide('toeic', 1)">›</button>
+                                    </div>
+                                    <div class="carousel-footer">
+                                        <div class="carousel-indicators"></div>
+                                        <div class="carousel-counter">
+                                            <span class="current">1</span> / <span class="total">1</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="certification-card">
+                    <div class="cert-header">
+                        <div class="cert-icon">🎓</div>
+                        <div>
+                            <h3>ISEN Paris - Cycle Préparatoire</h3>
+                            <p class="cert-issuer">École d'Ingénieurs</p>
+                        </div>
+                    </div>
+                    <div class="cert-body">
+                        <p class="cert-description">
+                            Cycle préparatoire intégré en sciences de l'ingénieur. Major de promotion
+                            avec représentation de l'école au Salon de l'Étudiant.
+                        </p>
+                        <div class="cert-details">
+                            <span class="cert-badge cert-badge-success">Major de Promotion</span>
+                            <span class="cert-badge">Ambassadeur</span>
+                            <div class="cert-gallery-wrapper">
+                                <button class="cert-gallery-btn" data-carousel="isen">
+                                    📸 Photos
+                                </button>
+                                <div class="carousel-popup" data-carousel-id="isen">
+                                    <span class="carousel-lock-icon">🔒</span>
+                                    <div class="carousel-header">
+                                        <h4>ISEN Paris</h4>
+                                        <p>Major de Promotion</p>
+                                    </div>
+                                    <div class="carousel-content">
+                                        <button class="carousel-nav prev" onclick="changeSlide('isen', -1)">‹</button>
+                                        <img class="carousel-image" src="images/isen-campus.jpg" alt="">
+                                        <button class="carousel-nav next" onclick="changeSlide('isen', 1)">›</button>
+                                    </div>
+                                    <div class="carousel-footer">
+                                        <div class="carousel-indicators"></div>
+                                        <div class="carousel-counter">
+                                            <span class="current">1</span> / <span class="total">1</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formations continues -->
+    <section class="continuous-learning">
+        <h2>Expériences Professionnelles</h2>
+        <p class="section-intro">
+            En parallèle de mes études, j'ai acquis différentes expériences professionnelles qui m'ont
+            permis de développer mes compétences techniques et humaines.
+        </p>
+
+        <div class="learning-grid">
+            <div class="learning-card">
+                <h3>💼 AI French/Maths Trainer</h3>
+                <p style="font-style: italic; opacity: 0.8; margin-bottom: 1rem;">Alignerr / Outlier (Jan 2025 - Présent)</p>
+                <ul>
+                    <li>Annotation et validation de données pour l'IA</li>
+                    <li>Optimisation de prompts</li>
+                    <li>Adaptation à différents profils</li>
+                    <li>Amélioration continue des modèles</li>
+                </ul>
+                <div style="margin-top: 1rem;">
+                    <div class="cert-gallery-wrapper">
+
+                        <div class="carousel-popup" data-carousel-id="outlier">
+                            <span class="carousel-lock-icon">🔒</span>
+                            <div class="carousel-header">
+                                <h4>AI Trainer</h4>
+                                <p>Alignerr / Outlier</p>
+                            </div>
+                            <div class="carousel-content">
+                                <button class="carousel-nav prev" onclick="changeSlide('outlier', -1)">‹</button>
+                                <img class="carousel-image" src="images/outlier-travail.jpg" alt="">
+                                <button class="carousel-nav next" onclick="changeSlide('outlier', 1)">›</button>
+                            </div>
+                            <div class="carousel-footer">
+                                <div class="carousel-indicators"></div>
+                                <div class="carousel-counter">
+                                    <span class="current">1</span> / <span class="total">1</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="learning-card">
+                <h3>🏭 Agent technique - ENGIE</h3>
+                <p style="font-style: italic; opacity: 0.8; margin-bottom: 1rem;">Siège L'Oréal France (Juil-Août 2025)</p>
+                <ul>
+                    <li>Maintenance et support technique</li>
+                    <li>Supervision des équipements (GTB)</li>
+                    <li>Procédures de sécurité</li>
+                    <li>Tests techniques</li>
+                </ul>
+                <div style="margin-top: 1rem;">
+                    <div class="cert-gallery-wrapper">
+                        <button class="cert-gallery-btn" data-carousel="engie">
+                            📸 Photos
+                        </button>
+                        <div class="carousel-popup" data-carousel-id="engie">
+                            <span class="carousel-lock-icon">🔒</span>
+                            <div class="carousel-header">
+                                <h4>Agent technique ENGIE</h4>
+                                <p>Siège L'Oréal France</p>
+                            </div>
+                            <div class="carousel-content">
+                                <button class="carousel-nav prev" onclick="changeSlide('engie', -1)">‹</button>
+                                <img class="carousel-image" src="images/engie-siege.jpg" alt="">
+                                <button class="carousel-nav next" onclick="changeSlide('engie', 1)">›</button>
+                            </div>
+                            <div class="carousel-footer">
+                                <div class="carousel-indicators"></div>
+                                <div class="carousel-counter">
+                                    <span class="current">1</span> / <span class="total">1</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="learning-card">
+                <h3>📚 Autres expériences</h3>
+                <ul>
+                    <li><strong>Tuteur académique</strong> - Parkours (Sept 2024 - Présent)</li>
+                    <li><strong>Conseiller de vente</strong> - Darty (Jan-Fév 2025)</li>
+                    <li><strong>Agent d'entretien</strong> - Mairie de Vanves (Juil-Août 2024)</li>
+                </ul>
+                <div style="margin-top: 1rem;">
+                    <div class="cert-gallery-wrapper">
+
+                        <div class="carousel-popup" data-carousel-id="autres">
+                            <span class="carousel-lock-icon">🔒</span>
+                            <div class="carousel-header">
+                                <h4>Autres expériences</h4>
+                                <p>Parcours professionnel</p>
+                            </div>
+                            <div class="carousel-content">
+                                <button class="carousel-nav prev" onclick="changeSlide('autres', -1)">‹</button>
+                                <img class="carousel-image" src="images/parkours.jpg" alt="">
+                                <button class="carousel-nav next" onclick="changeSlide('autres', 1)">›</button>
+                            </div>
+                            <div class="carousel-footer">
+                                <div class="carousel-indicators"></div>
+                                <div class="carousel-counter">
+                                    <span class="current">1</span> / <span class="total">1</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="navigation-buttons">
+        <a href="../projets.html" class="btn-secondary">← Projets</a>
+        <a href="../competences.html" class="btn-primary">Compétences →</a>
+    </div>
+</div>
+
+<footer>
+    <p>"Toutes les grandes personnes ont d'abord été des enfants, mais peu d'entre elles s'en souviennent."</p>
+    <p>© 2026 - Portfolio conçu avec passion</p>
+</footer>
+
+<script src="script.js"></script>
+<script>
+    // Données des carrousels - À personnaliser avec vos vraies images
+    const carouselData = {
+        apu: {
+            images: [
+                "Asia_photo/PXL_20251210_040517092.MP.jpg",
+                "Asia_photo/IMG-20251007-WA0355.jpg",
+                "Asia_photo/Screenshot_20250831-203958.png",
+                "Asia_photo/PXL_20250928_122355210.MP.jpg",
+                "Asia_photo/WhatsApp Image 2025-09-26 at 15.23.40_21da308f (1).jpg"
+            ]
+        },
+        efrei: {
+            images: [
+                "photo_efrei/seminaire_orientation(49).jpg",
+                "photo_efrei/ssd(10).jpg",
+                "photo_efrei/jpo(095).jpg",
+            ]
+        },
+        voltaire: {
+            images: [
+                "Voltaire/Voltaire_.png"
+            ]
+        },
+        toeic: {
+            images: [
+                "TOIEC/Toeic.png"
+            ]
+        },
+        isen: {
+            images: [
+                "Isen/23_Groupe-ISEN.jpg",
+                "Isen/site5-1-1536x1152-1-700x525-1.jpg",
+                "Isen/img.png"
+            ]
+        },
+        outlier: {
+            images: [
+                "images/outlier-travail.jpg",
+                "images/outlier-interface.jpg"
+            ]
+        },
+        engie: {
+            images: [
+                "Engie/img.png",
+                "Engie/IMG-20251011-WA0054.jpg",
+                "Engie/vue.png",
+
+            ]
+        },
+        autres: {
+            images: [
+                "images/parkours.jpg",
+                "images/darty.jpg",
+                "images/vanves.jpg"
+            ]
+        }
+    };
+
+    // État des carrousels
+    const carouselStates = {};
+
+    // Initialiser tous les carrousels
+    document.querySelectorAll('[data-carousel]').forEach(btn => {
+        const carouselId = btn.getAttribute('data-carousel');
+        const wrapper = btn.closest('.cert-gallery-wrapper');
+        const popup = wrapper.querySelector('.carousel-popup');
+
+        carouselStates[carouselId] = {
+            index: 0,
+            locked: false,
+            hoverTimeout: null
+        };
+
+        // Initialiser le carrousel
+        initCarousel(carouselId, popup);
+
+        // Événement hover sur le bouton
+        btn.addEventListener('mouseenter', () => {
+            if (!carouselStates[carouselId].locked) {
+                clearTimeout(carouselStates[carouselId].hoverTimeout);
+                popup.classList.add('active');
+            }
+        });
+
+        btn.addEventListener('mouseleave', () => {
+            if (!carouselStates[carouselId].locked) {
+                carouselStates[carouselId].hoverTimeout = setTimeout(() => {
+                    popup.classList.remove('active');
+                }, 300);
+            }
+        });
+
+        // Événement hover sur le popup
+        popup.addEventListener('mouseenter', () => {
+            clearTimeout(carouselStates[carouselId].hoverTimeout);
+        });
+
+        popup.addEventListener('mouseleave', () => {
+            if (!carouselStates[carouselId].locked) {
+                carouselStates[carouselId].hoverTimeout = setTimeout(() => {
+                    popup.classList.remove('active');
+                }, 300);
+            }
+        });
+
+        // Clic sur le popup pour verrouiller
+        popup.addEventListener('click', (e) => {
+            // Ne pas verrouiller si on clique sur les boutons de navigation
+            if (!e.target.closest('.carousel-nav') && !e.target.closest('.carousel-indicator')) {
+                carouselStates[carouselId].locked = !carouselStates[carouselId].locked;
+                if (carouselStates[carouselId].locked) {
+                    popup.classList.add('locked');
+                } else {
+                    popup.classList.remove('locked');
+                    popup.classList.remove('active');
+                }
+            }
+        });
+    });
+
+    function initCarousel(carouselId, popup) {
+        const data = carouselData[carouselId];
+        if (!data) return;
+
+        // Mettre à jour le total
+        const totalSpan = popup.querySelector('.total');
+        totalSpan.textContent = data.images.length;
+
+        // Créer les indicateurs
+        const indicatorsContainer = popup.querySelector('.carousel-indicators');
+        indicatorsContainer.innerHTML = '';
+
+        data.images.forEach((img, index) => {
+            const indicator = document.createElement('div');
+            indicator.className = 'carousel-indicator' + (index === 0 ? ' active' : '');
+            indicator.onclick = () => goToSlide(carouselId, index);
+            indicatorsContainer.appendChild(indicator);
+        });
+
+        // Masquer les flèches si une seule image
+        if (data.images.length <= 1) {
+            popup.querySelectorAll('.carousel-nav').forEach(nav => {
+                nav.style.display = 'none';
+            });
+        }
+
+        updateCarousel(carouselId, popup);
+    }
+
+    function changeSlide(carouselId, direction) {
+        const state = carouselStates[carouselId];
+        const data = carouselData[carouselId];
+        if (!data) return;
+
+        state.index += direction;
+
+        if (state.index < 0) {
+            state.index = data.images.length - 1;
+        } else if (state.index >= data.images.length) {
+            state.index = 0;
+        }
+
+        const popup = document.querySelector(`[data-carousel-id="${carouselId}"]`);
+        updateCarousel(carouselId, popup);
+    }
+
+    function goToSlide(carouselId, index) {
+        const state = carouselStates[carouselId];
+        state.index = index;
+
+        const popup = document.querySelector(`[data-carousel-id="${carouselId}"]`);
+        updateCarousel(carouselId, popup);
+    }
+
+    function updateCarousel(carouselId, popup) {
+        const state = carouselStates[carouselId];
+        const data = carouselData[carouselId];
+        if (!data) return;
+
+        // Mettre à jour l'image
+        const img = popup.querySelector('.carousel-image');
+        img.src = data.images[state.index];
+
+        // Mettre à jour le compteur
+        const currentSpan = popup.querySelector('.current');
+        currentSpan.textContent = state.index + 1;
+
+        // Mettre à jour les indicateurs
+        popup.querySelectorAll('.carousel-indicator').forEach((indicator, index) => {
+            if (index === state.index) {
+                indicator.classList.add('active');
+            } else {
+                indicator.classList.remove('active');
+            }
+        });
+    }
+
+    // Fermer tous les carrousels verrouillés en cliquant à l'extérieur
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.cert-gallery-wrapper')) {
+            document.querySelectorAll('.carousel-popup.locked').forEach(popup => {
+                const carouselId = popup.getAttribute('data-carousel-id');
+                if (carouselStates[carouselId]) {
+                    carouselStates[carouselId].locked = false;
+                }
+                popup.classList.remove('locked', 'active');
+            });
+        }
+    });
+
+    // Support clavier pour la navigation
+    document.addEventListener('keydown', (e) => {
+        const activePopup = document.querySelector('.carousel-popup.active');
+        if (activePopup) {
+            const carouselId = activePopup.getAttribute('data-carousel-id');
+
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                changeSlide(carouselId, -1);
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                changeSlide(carouselId, 1);
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                carouselStates[carouselId].locked = false;
+                activePopup.classList.remove('locked', 'active');
+            }
+        }
+    });
+</script>
+</body>
+</html>

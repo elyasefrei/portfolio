@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Profil</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Style pour la photo de profil */
+        .profile-image-large {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #FFD700;
+            box-shadow: 0 0 30px rgba(180, 78, 8, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .profile-image-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Style pour la section téléchargement CV dans la profile card */
+        .profile-card {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .profile-cv-download {
+            flex-shrink: 0;
+            width: 200px;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%);
+            border: 2px solid #FF8C00;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(255, 140, 0, 0.3);
+        }
+
+        .cv-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .profile-cv-download h3 {
+            color: #FFD700;
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+
+        .profile-cv-download p {
+            color: #d1d5db;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .btn-download-cv {
+            background: linear-gradient(135deg, #FF8C00 0%, #FFD700 100%);
+            color: #0a0e27;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 140, 0, 0.4);
+        }
+
+        .btn-download-cv:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 140, 0, 0.6);
+        }
+
+        .btn-download-cv span {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+
+<nav>
+    <div class="nav-brand">Mon Portfolio</div>
+    <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="profil2.html" class="active">Profil</a></li>
+        <li><a href="projets.html">Projets</a></li>
+        <li><a href="certifications.html">Formation</a></li>
+        <li><a href="competences.html">Compétences</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+    </ul>
+</nav>
+
+<div class="floating-planet" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"></div>
+
+<div class="container page-content">
+    <div class="page-header">
+        <h1>Profil & Curriculum Vitae</h1>
+        <p class="page-subtitle">"Fais de ta vie un rêve, et d'un rêve, une réalité" — Antoine de Saint-Exupéry</p>
+    </div>
+
+    <!-- Section Profil -->
+    <section class="profile-main">
+        <div class="profile-card">
+            <div class="profile-image-large">
+                <img src="photo%20portfolio%20et%20cv/3ec62be1-3c17-477a-a56e-f50d0a0901a8.png" alt="Elyas Tarzet" onerror="this.style.display='none'; this.parentElement.innerHTML='🎓';">
+            </div>
+            <div class="profile-details">
+                <h2>Elyas Tarzet</h2>
+                <p class="profile-title">Étudiant Ingénieur en Data & Machine Learning</p>
+
+                <div class="profile-info">
+                    <div class="info-item">
+                        <span class="info-label">📍 Localisation :</span>
+                        <span class="info-value">Vanves, France</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">🎓 Formation :</span>
+                        <span class="info-value">3ème année Cycle Ingénieur</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">🏫 École :</span>
+                        <span class="info-value">EFREI Paris (Top 12% de promo)</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">📅 Disponibilité :</span>
+                        <span class="info-value">Septembre 2026 - Alternance 24 mois</span>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-cv-download">
+                <div class="cv-icon">📄</div>
+                <h3>Mon CV</h3>
+                <p>Téléchargez mon curriculum vitae complet</p>
+                <button class="btn-download-cv" onclick="downloadCV()">
+                    <span> ️</span> Télécharger
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- À Propos -->
+    <section class="about-section">
+        <h2>À Propos</h2>
+        <div class="about-content">
+            <p>
+                Étudiant en 3ème année d'école d'ingénieur à l'EFREI Paris, je suis passionné par la Data
+                Science et le Machine Learning. Classé dans le top 12% de ma promotion, je m'investis pleinement
+                dans mes études et mes projets académiques.
+            </p>
+            <p>
+                Mon parcours m'a permis d'acquérir des compétences solides en programmation (Python, Java, C),
+                en analyse de données et en développement de modèles de Machine Learning. J'ai également eu
+                l'opportunité d'effectuer un semestre d'échange à l'Asia Pacific University en Malaisie, où j'ai
+                étudié dans un environnement 100% anglophone.
+            </p>
+            <p>
+                Je recherche une alternance de 24 mois dès septembre 2026 dans les domaines de la Data et du
+                Machine Learning. Rigoureux et autonome, je suis prêt à m'investir pleinement dans les missions
+                qui me seront confiées et à contribuer activement aux projets de l'entreprise.
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <h2>Me Contacter</h2>
+        <p class="contact-intro">N'hésitez pas à me contacter pour discuter d'opportunités d'alternance ou pour plus d'informations.</p>
+
+        <div class="contact-grid">
+            <div class="contact-card">
+                <div class="contact-icon-large">📧</div>
+                <h3>Email</h3>
+                <p><a href="mailto:elyastarzet@gmail.com" class="__cf_email__" data-cfemail="d1b4bda8b0a2a5b0a3abb4a591b6bcb0b8bdffb2bebc">elyastarzet@gmail.com</a></p>
+                <a href="mailto:elyastarzet@gmail.com" class="contact-link">Envoyer un email</a>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon-large">📱</div>
+                <h3>Téléphone</h3>
+                <p>06 38 31 47 66</p>
+                <a href="tel:+33638314766" class="contact-link">Appeler</a>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon-large">💼</div>
+                <h3>LinkedIn</h3>
+                <p>Connectons-nous</p>
+                <a href="https://linkedin.com/in/elyastarzet" target="_blank" class="contact-link">Voir le profil</a>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon-large">💻</div>
+                <h3>GitHub</h3>
+                <p>Découvrez mes projets</p>
+                <a href="https://github.com/elyasefrei" target="_blank" class="contact-link">Visiter GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-box">
+        <h2>Intéressé(e) par mon profil ?</h2>
+        <p>Je suis activement à la recherche d'une alternance de 24 mois en Data Science et Machine Learning dès septembre 2026. Rigoureux et autonome, je suis prêt à m'investir pleinement dans les missions qui me seront confiées.</p>
+        <div class="cta-buttons">
+            <a href="mailto:elyastarzet@gmail.com" target="_blank" class="btn-primary">📧 Me contacter</a>
+            <a href="projets.html" class="btn-secondary">🚀 Voir mes projets</a>
+        </div>
+    </section>
+
+    <div class="navigation-buttons">
+        <a href="index.html" class="btn-secondary">← Accueil</a>
+        <a href="projets.html" class="btn-primary">Projets →</a>
+    </div>
+</div>
+
+<footer>
+    <p>"Toutes les grandes personnes ont d'abord été des enfants, mais peu d'entre elles s'en souviennent."</p>
+    <p>© 2026 - Portfolio conçu avec passion</p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="script.js"></script>
+<script src="script.js"></script>
+<script>
+    function downloadCV() {
+        // Crée un lien de téléchargement
+        const link = document.createElement('a');
+        link.href = 'Resume_Elyas_Tarzet_alternance.pdf';
+        link.download = 'CV_Elyas_TARZET.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>
+</body>
+</html>
